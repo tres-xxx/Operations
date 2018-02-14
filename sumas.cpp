@@ -5,6 +5,48 @@
 #include <iostream>
 using namespace std;
 
+int random_number(int amountD){
+    //srand (time(NULL));
+    return rand() % amountD;
+};
+
+int getting_last_result(int m, int result, int numbers, int amount){
+    switch(m){
+        case 1: result = result + numbers;break;
+        case 2: result-=numbers; break;
+        case 3: result = result * numbers;break;
+        case 4: while(numbers==0)numbers=random_number(amount);
+                result=result/numbers;break;
+        default: cout << "error";
+    }
+    return result;
+}
+
+int getting_result(int pos, int m, int result, int numbers, int amount){
+    switch(m){
+        case 1: cout << " + ";
+                result = result + numbers;
+                break;
+        case 2: cout << " - ";
+                if(pos==0) result = numbers - result;
+                else result-=numbers;
+                break;
+        case 3: cout << " * ";
+                result = result * numbers;
+                break;
+        case 4: if(pos==0) result = numbers / result;
+                else{
+                    while(numbers==0){ numbers = random_number(amount);} //Check 0
+                    cout << numbers;
+                    cout << " / ";
+                    result = result / numbers;
+                }
+                break;
+        default: cout << "error"; //There is nothing if there is an error
+    }
+    return result;
+};
+
 void operation(int m){
 	
     cout << "Introduce the amount of numbers to operate" << endl;
@@ -20,35 +62,25 @@ void operation(int m){
     int exit = 1;
 	while(exit == 1){
         int result;
-        if(m!=3) result = 0;
+        if(m!=3 && m!= 4) result = 0; //Add and substract
         else result = 1;
         srand (time(NULL));
 		for(int i=0; i < amount_numbers; i++){
-			numbers[i] = rand() % amount_digits;
+			//numbers[i] = rand() % amount_digits;
+            numbers[i] = random_number(amount_digits);
             if(i < (amount_numbers-1)){          
-                cout << numbers[i];                
-                switch(m){
-                    case 1: cout << " + ";
-                            result = result + numbers[i];
-                            break;
-                    case 2: cout << " - ";
-                            if(i==0) result = numbers[i] - result;
-                            else result-=numbers[i];
-                            break;
-                    case 3: cout << " * ";
-                            result = result * numbers[i];
-                            break;
-                    default: cout << "error";
+                if(m!=4) cout << numbers[i];                
+                else{
+                    if(i == 0 && m == 4){ 
+                        cout << numbers[i];
+                        if(amount_numbers > 1) cout << " / ";
+                    }
                 }
+                result = getting_result(i,m,result,numbers[i],amount_digits);
             }
             else{
                 cout << numbers[i];
-                switch(m){
-                    case 1: result = result + numbers[i];break;
-                    case 2: result-=numbers[i]; break;
-                    case 3: result = result * numbers[i];break;
-                    default: cout << "error";
-                }
+                result = getting_last_result(m,result,numbers[i],amount_digits);
             }
 		}
         
@@ -82,6 +114,7 @@ void print_menu(){
 	cout << "1. Add" << endl;
     cout << "2. Substract" << endl;
     cout << "3. Multiplication" << endl;
+    cout << "4. Division" << endl;
 	cout << "0. Exit" << endl;
     cout << "Tap: ";
 };
@@ -89,13 +122,14 @@ void print_menu(){
 void menu(int op){ //This menu has no sense!!!!
 	switch(op){
         //(1)add
-		case 1: operation(1);break;
-        case 2: operation(2);break;
-        case 3: operation(3);break;
+		case 1: 
+        case 2: 
+        case 3: 
+        case 4: operation(op); break;
         case 0: cout << "I hope you enjoy it!!!" << endl; break;
 		default: cout << "No valid option" << endl;
 	}
-}
+};
 
 
 int main(){
@@ -106,4 +140,5 @@ int main(){
         menu(option_menu);
 	}
 	while(option_menu!=0);
-}
+    return 0;
+};
